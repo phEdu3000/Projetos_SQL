@@ -171,3 +171,42 @@ select * from Turma;
 INSERT INTO Matricula_Disciplina (id_matricula, id_disciplina, ano_semestre, status)
 SELECT id_matricula, 1, '2024/1', 'Aprovado' FROM Matricula WHERE id_matricula <= 30;
 
+INSERT INTO Nota (id_matricula_disciplina, nota1, nota2, nota_final, data_avaliacao) VALUES
+(1, 7.5, 8.0, 7.75, '2024-06-01'), (2, 6.0, 7.0, 6.5, '2024-06-01'), (3, 9.0, 8.5, 8.75, '2024-06-01'),
+(4, 5.5, 6.0, 5.75, '2024-06-01'), (5, 8.0, 8.0, 8.0, '2024-06-01'), (6, 7.0, 7.5, 7.25, '2024-06-01'),
+(7, 4.0, 5.0, 4.5, '2024-06-01'), (8, 10.0, 9.5, 9.75, '2024-06-01'), (9, 6.5, 7.0, 6.75, '2024-06-01'),
+(10, 8.5, 8.5, 8.5, '2024-06-01'), (11, 7.0, 6.0, 6.5, '2024-06-01'), (12, 9.5, 10.0, 9.75, '2024-06-01'),
+(13, 5.0, 5.0, 5.0, '2024-06-01'), (14, 8.0, 9.0, 8.5, '2024-06-01'), (15, 7.5, 7.5, 7.5, '2024-06-01'),
+(16, 6.0, 6.0, 6.0, '2024-06-01'), (17, 9.0, 9.0, 9.0, '2024-06-01'), (18, 4.5, 5.5, 5.0, '2024-06-01'),
+(19, 10.0, 10.0, 10.0, '2024-06-01'), (20, 7.0, 8.0, 7.5, '2024-06-01'), (21, 8.0, 7.0, 7.5, '2024-06-01'),
+(22, 6.5, 6.5, 6.5, '2024-06-01'), (23, 5.5, 7.5, 6.5, '2024-06-01'), (24, 9.0, 8.0, 8.5, '2024-06-01'),
+
+(25, 7.0, 7.0, 7.0, '2024-06-01'), (26, 8.5, 9.5, 9.0, '2024-06-01'), (27, 6.0, 5.0, 5.5, '2024-06-01'),
+(28, 7.5, 8.5, 8.0, '2024-06-01'), (29, 9.0, 10.0, 9.5, '2024-06-01'), (30, 8.0, 8.0, 8.0, '2024-06-01');
+
+EXPLAIN SELECT * FROM Aluno WHERE nome = 'Ana Silva';
+EXPLAIN SELECT * FROM Nota WHERE nota_final > 9.0;
+
+CREATE INDEX idx_aluno_nome ON Aluno(nome);
+CREATE INDEX idx_curso_nome ON Curso(nome);
+CREATE INDEX idx_disciplina_nome ON Disciplina(nome);
+CREATE INDEX idx_professor_depto ON Professor(departamento);
+CREATE INDEX idx_matricula_status ON Matricula(status);
+CREATE INDEX idx_mat_disc_ano ON Matricula_Disciplina(ano_semestre);
+CREATE INDEX idx_nota_final ON Nota(nota_final);
+CREATE INDEX idx_turma_sala ON Turma(sala);
+
+EXPLAIN
+SELECT D.nome AS disciplina, P.nome AS professor, N.nota_final
+FROM Disciplina D
+JOIN Professor P ON D.id_professor = P.id_professor
+JOIN Matricula_Disciplina MD ON D.id_disciplina = MD.id_disciplina
+JOIN Nota N ON MD.id_matricula_disciplina = N.id_matricula_disciplina
+WHERE N.nota_final > 8.0;
+
+EXPLAIN
+SELECT T.ano_semestre, D.nome, T.horario, T.sala
+
+FROM Turma T
+JOIN Disciplina D ON T.id_disciplina = D.id_disciplina
+WHERE T.ano_semestre = '2024/1';
