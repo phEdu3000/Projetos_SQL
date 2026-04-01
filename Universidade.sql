@@ -115,3 +115,73 @@ INSERT INTO Disciplina (Nome, carga_horaria, descricao) VALUES
 ('Programacao Web', 60, 'HTML, CSS e PHP'),
 ('Seguranca da Informacao', 40, 'Criptografia e seguranca'),
 ('Computacao em Nuvem', 40, 'Cloud e servicos online');
+
+CREATE VIEW vw_alunos_cursos AS
+SELECT a.id, a.nome, c.nome AS curso, m.status
+FROM Aluno a
+JOIN Matricula m ON a.id = m.id_aluno
+JOIN Curso c ON m.id_curso = c.id;
+
+CREATE VIEW vw_alunos_disciplinas AS
+SELECT a.nome AS aluno, d.nome AS disciplina, md.ano_semestre, md.status
+FROM Matricula_Disciplina md
+JOIN Matricula m ON md.id_matricula = m.id
+JOIN Aluno a ON m.id_aluno = a.id
+JOIN Disciplina d ON md.id_disciplina = d.id;
+
+CREATE VIEW vw_notas_alunos AS
+SELECT a.nome AS aluno, d.nome AS disciplina, n.nota1, n.nota2, n.nota_final
+FROM Nota n
+JOIN Matricula_Disciplina md ON n.id_matricula_disciplina = md.id_matricula_disciplina
+JOIN Matricula m ON md.id_matricula = m.id
+JOIN Aluno a ON m.id_aluno = a.id
+JOIN Disciplina d ON md.id_disciplina = d.id;
+
+CREATE VIEW vw_turmas_disciplinas AS
+SELECT t.id_turma, d.nome AS disciplina, t.ano_semestre, t.horario, t.sala
+FROM Turma t
+JOIN Disciplina d ON t.id_disciplina = d.id;
+
+CREATE VIEW vw_status_matricula AS
+SELECT a.nome AS aluno, c.nome AS curso, m.status
+FROM Matricula m
+JOIN Aluno a ON m.id_aluno = a.id
+JOIN Curso c ON m.id_curso = c.id;
+
+CREATE VIEW vw_media_alunos AS
+SELECT a.nome AS aluno, d.nome AS disciplina, n.nota_final
+FROM Nota n
+JOIN Matricula_Disciplina md ON n.id_matricula_disciplina = md.id_matricula_disciplina
+JOIN Matricula m ON md.id_matricula = m.id
+JOIN Aluno a ON m.id_aluno = a.id
+JOIN Disciplina d ON md.id_disciplina = d.id;
+
+CREATE VIEW vw_disciplina_qtd_alunos AS
+SELECT d.nome AS disciplina, COUNT(md.id_matricula_disciplina) AS qtd_alunos
+FROM Disciplina d
+LEFT JOIN Matricula_Disciplina md ON d.id = md.id_disciplina
+GROUP BY d.id;
+
+CREATE VIEW vw_curso_qtd_alunos AS
+SELECT c.nome AS curso, COUNT(m.id) AS qtd_alunos
+FROM Curso c
+LEFT JOIN Matricula m ON c.id = m.id_curso
+GROUP BY c.id;
+
+CREATE VIEW vw_alunos_turmas AS
+SELECT a.nome AS aluno, t.id_turma, t.horario, t.sala, d.nome AS disciplina
+FROM Matricula_Disciplina md
+JOIN Matricula m ON md.id_matricula = m.id
+JOIN Aluno a ON m.id_aluno = a.id
+JOIN Turma t ON md.id_disciplina = t.id_disciplina
+JOIN Disciplina d ON t.id_disciplina = d.id;
+
+SELECT * FROM vw_alunos_cursos;
+SELECT * FROM vw_alunos_disciplinas;
+SELECT * FROM vw_notas_alunos;
+SELECT * FROM vw_turmas_disciplinas;
+SELECT * FROM vw_status_matricula;
+SELECT * FROM vw_media_alunos;
+SELECT * FROM vw_disciplina_qtd_alunos;
+SELECT * FROM vw_curso_qtd_alunos;
+SELECT * FROM vw_alunos_turmas;
