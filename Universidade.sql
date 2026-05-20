@@ -185,3 +185,5 @@ SELECT * FROM vw_media_alunos;
 SELECT * FROM vw_disciplina_qtd_alunos;
 SELECT * FROM vw_curso_qtd_alunos;
 SELECT * FROM vw_alunos_turmas;
+
+select * from Disciplina;
